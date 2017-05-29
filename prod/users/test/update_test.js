@@ -51,9 +51,19 @@ describe('Updating a user', () => {
   it ('model class findByIdAndUpdate', (done) => {
     // Find and Update a single record by id
     assertName(
-      User.findOneAndUpdate(joe._id, { name: 'Alex' }),
+      User.findByIdAndUpdate(joe._id, { name: 'Alex' }),
       done
     );
+  });
+
+  it ('User has postCount incremented by 1', (done) => {
+    // Find and Update a single record by id
+    User.update({ name: 'Joe'}, { $inc: { postCount: 10 }})
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user.postCount === 10);
+        done();
+      });
   });
 
 });
