@@ -11,44 +11,49 @@ describe('Updating a user', () => {
       .then(() => done());
   });
 
+  function assertName(operation, done) {
+    operation
+      .then(() => User.find({}))
+      .then((users) => {
+        assert(users.length === 1);
+        assert(users[0].name === 'Alex');
+        done();
+      });
+  }
+
   it ('model instance set & save', (done) => {
-    // Single instance update
-    joe.remove()
-      .then(() => User.findOne({ name: 'Joe' }))
-      .then((user) => {
-        assert(user === null);
-        done();
-      });
+    // Single instance set & save of multiple properties
+    joe.set('name','Alex');
+    assertName(joe.save(), done);
   });
 
-  it ('class method remove', (done) => {
-    // Remove a number of records wth criteria
-    User.remove({ name: 'Joe'})
-      .then(() => User.findOne({ name: 'Joe' }))
-      .then((user) => {
-        assert(user === null);
-        done();
-      });
+  it ('model instance update', (done) => {
+    // Update single instance
+    assertName(joe.update({ name: 'Alex'}), done);
   });
 
-  it ('class method findOneAndRemove', (done) => {
-    // Remove a single record
-    User.findOneAndRemove({ name: 'Joe'})
-      .then(() => User.findOne({ name: 'Joe' }))
-      .then((user) => {
-        assert(user === null);
-        done();
-      });
+  it ('model class update', (done) => {
+    // Update single instance
+    assertName(
+      User.update({ name: 'Joe' }, { name: 'Alex'}),
+      done
+    );
   });
 
-  it ('class method findByIdAndRemove', (done) => {
-    // Find and Remove a single record by id
-    User.findByIdAndRemove(joe._id)
-      .then(() => User.findOne({ _id: joe._id }))
-      .then((user) => {
-        assert(user === null);
-        done();
-      });
+  it ('model class findOneAndUpdate', (done) => {
+    // Update a single record by attribute
+    assertName(
+      User.findOneAndUpdate({ name: 'Joe'}, { name: 'Alex' }),
+      done
+    );
+  });
+
+  it ('model class findByIdAndUpdate', (done) => {
+    // Find and Update a single record by id
+    assertName(
+      User.findOneAndUpdate(joe._id, { name: 'Alex' }),
+      done
+    );
   });
 
 });
