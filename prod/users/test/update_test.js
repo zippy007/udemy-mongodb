@@ -56,7 +56,7 @@ describe('Updating a user', () => {
     );
   });
 
-  it ('User has postCount incremented by 1', (done) => {
+  it ('User has postCount incremented by 10', (done) => {
     // Find and Update a single record by id
     User.update({ name: 'Joe'}, { $inc: { postCount: 10 }})
       .then(() => User.findOne({ name: 'Joe' }))
