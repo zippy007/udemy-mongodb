@@ -35,4 +35,25 @@ describe('Validating Records', () => {
         done();
       });
   });
+
+  it('Can remove exsiting subdocuments from an existing record', (done) => {
+    const joe = new User({
+      name: 'Joe',
+      posts: [{ title: 'New Title'}]
+    });
+
+    joe.save()
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        const post = user.posts[0];
+        // Removing Subdocument Does not Save to DB still need manual save.
+        post.remove();
+        return user.save();
+      })
+      .then(() => User.findOne({ name: 'Joe' }))
+      .then((user) => {
+        assert(user.posts.length === 0);
+        done();
+      });
+  });
 });
