@@ -23,7 +23,7 @@ describe('Associations', (done) => {
         .then(() => done());
   });
 
-  it.only('Saves a relation between user and a blogpost', (done) => {
+  it('Saves a relation between user and a blogpost', (done) => {
     User.findOne({ name: 'Joe' })
       .populate('blogPosts')
       .then((user) => {
