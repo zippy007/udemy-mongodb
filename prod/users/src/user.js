@@ -23,6 +23,15 @@ UserSchema.virtual('postCount').get(function() {
 	return this.posts.length;
 });
 
+UserSchema.pre('remove', function(next) {
+	// Avoid Cyclic Dependency using require() but this method here.
+	const BlogPost = mongoose.model('blogPost');
+
+	BlogPost.remove({ id_: { $in: this.blogPosts } })
+		// Call next middleware in chain or execture the above remove
+		.then(() => next());
+});
+
 const User = mongoose.model('user',UserSchema)
 
 module.exports = User;
