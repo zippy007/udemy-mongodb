@@ -27,7 +27,6 @@ describe('Associations', (done) => {
     User.findOne({ name: 'Joe' })
       .populate('blogPosts')
       .then((user) => {
-        console.log(user);
         assert(user.blogPosts[0].title === 'JS is Great')
         done();
       });
